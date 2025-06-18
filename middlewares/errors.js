@@ -1,0 +1,15 @@
+module.exports = (err, req, res, next) => {
+  if (err.name === 'ValidationError' || err.name === 'CastError') {
+    res.status(400).send({ message: 'Данные введены неправильно' });
+    return;
+  }
+
+  if (err.name === 'DocumentNotFoundError') {
+    res.status(404).send({ message: 'Запрошенный объект не найден' });
+    return;
+  }
+
+  const { code = 500 } = err;
+
+  res.status(code).send({ message: code === 500 ? 'Произошла ошибка' : err.message });
+};
